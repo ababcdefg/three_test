@@ -1,5 +1,6 @@
 import {
-  Scene, PerspectiveCamera, OrthographicCamera, BoxGeometry, MeshBasicMaterial, Mesh, WebGLRenderer, Vector3, AxesHelper, Group, Color, Clock,
+  Scene, PerspectiveCamera, OrthographicCamera, BoxGeometry, MeshBasicMaterial, Mesh, WebGLRenderer, Vector3,
+  AxesHelper, Group, Color, Clock, BufferAttribute, BufferGeometry
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Gsap from 'gsap';
@@ -22,7 +23,7 @@ const camera = new PerspectiveCamera(75, viewSize.width / viewSize.height, 0.1, 
 camera.position.set(0, 0, 5)
 scene.add(camera)
 // controls
-const controls = new OrbitControls(camera,renderer.domElement)
+const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true   //启用相机控制器阻尼  (每一帧要调用控件的update更改相机状态)
 // controls.target.y = 1
 
@@ -31,8 +32,11 @@ controls.enableDamping = true   //启用相机控制器阻尼  (每一帧要调�
 const axesHelper = new AxesHelper(20)
 scene.add(axesHelper)
 
-const geometry = new BoxGeometry(1, 1, 1)
-const material = new MeshBasicMaterial({ color: 0xffff00 })
+const geometry = new BoxGeometry(1, 1, 1, 2, 2, 2)
+const material = new MeshBasicMaterial({
+  color: 0xffff00,
+  wireframe: true
+})
 const cube = new Mesh(geometry, material)
 // scene.add(cube)
 
@@ -48,7 +52,18 @@ Gsap.to(cube2.position, { x: 2, duration: 1, delay: 1 })
 Gsap.to(cube2.position, { x: -2, duration: 1, delay: 2 })
 
 
-
+//bufferGeometry
+const count = 50
+const buffer = new Float32Array(count * 3 * 3)
+for (let i = 0; i < count * 3 * 3; i++) {
+  buffer[i] = (Math.random() - 0.5) * 2
+}
+const posAttribute = new BufferAttribute(buffer, 3)
+const bfGeo = new BufferGeometry()
+bfGeo.setAttribute('position', posAttribute)
+const mat = new MeshBasicMaterial({ color: 0x00ffff, wireframe: true })
+const cube3 = new Mesh(bfGeo, mat)
+scene.add(cube3)
 
 const clock = new Clock()   //时钟
 const tick = () => {
