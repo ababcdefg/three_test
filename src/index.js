@@ -4,10 +4,11 @@ import {
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import Gsap from 'gsap';
+import GUI from 'lil-gui';
 
 
 const scene = new Scene()
-scene.background = new Color(0.2, 0.2, 0.2)
+scene.background = new Color(0,0,0)
 
 const viewSize = { width: 800, height: 600 } //视口比例
 
@@ -56,7 +57,7 @@ Gsap.to(cube2.position, { x: -2, duration: 1, delay: 2 })
 const count = 50
 const buffer = new Float32Array(count * 3 * 3)
 for (let i = 0; i < count * 3 * 3; i++) {
-  buffer[i] = (Math.random() - 0.5) * 2
+  buffer[i] = (Math.random() - 2) * 2
 }
 const posAttribute = new BufferAttribute(buffer, 3)
 const bfGeo = new BufferGeometry()
@@ -95,3 +96,57 @@ tick()
 // setTimeout(() => {
 //   group.rotation.set(0, 0, 1)
 // }, 3000)
+
+
+const debugObject = {
+  color: '#ff0000',
+  spin: () => {
+    Gsap.to(cube4.rotation, { y: cube4.rotation.y + Math.PI * 2 })
+  },
+  subdivision: 1
+}
+
+const material2 = new MeshBasicMaterial({ color: debugObject.color })
+const cube4 = new Mesh(
+  new BoxGeometry(1, 1, 1),
+  material2
+)
+scene.add(cube4)
+
+const Gui = new GUI({
+  width:300,
+  title:'GUI',
+  closeFolders:false
+})
+// Gui.close()
+// Gui.hide()
+window.addEventListener('keyup',(e)=>{
+  if(e.key === 'h'){
+    Gui.show(Gui._hidden)
+  }
+})
+const cube3Pos = Gui.addFolder('position')
+
+cube3Pos.add(cube4.position, 'x').min(-3).max(3).step(0.1).name('x :')
+cube3Pos.add(cube4.position, 'y', -3, 3, 0.1)
+cube3Pos.add(cube4.position, 'z', [-1, 0, 1])
+
+Gui.add(cube4, 'visible')
+Gui.add(material2, 'wireframe')
+
+// Gui.add(material2.color,'r',0,1,0.01)
+// Gui.add(material2.color,'g',0,1,0.01)
+// Gui.add(material2.color,'b',0,1,0.01)
+// Gui.addColor(material2,'color')
+Gui.addColor(debugObject, 'color')
+  .onChange((value) => {
+    material2.color.set(debugObject.color)
+  });
+//lil-gui检测出增加的属性值为函数, 则会创建一个button, 点击则会调用函数
+Gui.add(debugObject, 'spin')
+
+Gui.add(debugObject, 'subdivision').min(1).max(10).step(1)
+  .onFinishChange((value) => {
+    cube4.geometry.dispose()
+    cube4.geometry = new BoxGeometry(1, 1, 1, value, value, value)
+  })
