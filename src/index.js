@@ -8,10 +8,11 @@ import Gsap from 'gsap';
 const scene = new Scene()
 scene.background = new Color(0.2, 0.2, 0.2)
 
-const viewSize = { width: 800, height: 600 } //视口比例
+const viewSize = { width: innerWidth, height: innerHeight } //视口比例
 
 const renderer = new WebGLRenderer()
 renderer.setSize(viewSize.width, viewSize.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))  //设置renderer按照浏览器的像素比渲染像素
 document.querySelector('#app')?.appendChild(renderer.domElement)
 
 //透视相机
@@ -22,7 +23,7 @@ const camera = new PerspectiveCamera(75, viewSize.width / viewSize.height, 0.1, 
 camera.position.set(0, 0, 5)
 scene.add(camera)
 // controls
-const controls = new OrbitControls(camera,renderer.domElement)
+const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true   //启用相机控制器阻尼  (每一帧要调用控件的update更改相机状态)
 // controls.target.y = 1
 
@@ -64,6 +65,29 @@ const tick = () => {
 }
 tick()
 
+
+window.addEventListener('resize', () => {
+  viewSize.width = innerWidth
+  viewSize.height = innerHeight
+
+  // update camera
+  camera.aspect = viewSize.width / viewSize.height
+  camera.updateProjectionMatrix()
+  //update renderer
+  renderer.setSize(viewSize.width, viewSize.height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+//双击全屏/退出全屏
+window.addEventListener('dblclick', () => {
+  // renderer.domElement.requestFullscreen({ navigationUI: document.fullscreenElement ? 'hide' : 'show' })
+  if (!document.fullscreenElement) {
+    renderer.domElement.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+})
+// document.body.webkitCancelFullScreen()
 // setTimeout(() => {
 //   cube.position.set(0.7, -0.6, -1)
 //   cube.scale.set(2, 0.5, 0.5)
