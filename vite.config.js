@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import glsl from 'vite-plugin-glsl'
 
 export default defineConfig({
   build: {
@@ -7,5 +8,8 @@ export default defineConfig({
       name: 'Counter',
       fileName: 'counter'
     }
-  }
+  },
+  plugins: [
+    glsl()
+  ]
 })

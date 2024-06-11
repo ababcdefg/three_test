@@ -7,8 +7,9 @@ import Gsap from 'gsap';
 import GUI from 'lil-gui';
 
 
+
 const scene = new Scene()
-scene.background = new Color(0,0,0)
+scene.background = new Color(0, 0, 0)
 
 const viewSize = { width: innerWidth, height: innerHeight } //视口比例
 
@@ -138,14 +139,14 @@ const cube4 = new Mesh(
 scene.add(cube4)
 
 const Gui = new GUI({
-  width:300,
-  title:'GUI',
-  closeFolders:false
+  width: 300,
+  title: 'GUI',
+  closeFolders: false
 })
 // Gui.close()
 // Gui.hide()
-window.addEventListener('keyup',(e)=>{
-  if(e.key === 'h'){
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'h') {
     Gui.show(Gui._hidden)
   }
 })

@@ -13,8 +13,8 @@ const tex_roughness = textureLoader.load('../public/static/textures/door/roughne
 
 const tex_matcap1 = textureLoader.load('../public/static/textures/matcaps/1.png')
 const tex_gradients3 = textureLoader.load('../public/static/textures/gradients/3.jpg')
-tex_gradients3.minFilter =  NearestFilter
-tex_gradients3.magFilter =  NearestFilter
+tex_gradients3.minFilter = NearestFilter
+tex_gradients3.magFilter = NearestFilter
 
 // tex_color.colorSpace = SRGBColorSpace
 
@@ -76,15 +76,15 @@ material.roughness = 0
 
 
 const Gui = new GUI({
-  width:300,
-  title:'GUI',
-  closeFolders:false
+  width: 300,
+  title: 'GUI',
+  closeFolders: false
 })
 
-Gui.add(material,'side')
-Gui.add(material,'metalness').step(0.01)
-Gui.add(material,'roughness').step(0.01)
-Gui.addColor(material,'color')
+Gui.add(material, 'side')
+Gui.add(material, 'metalness').step(0.01)
+Gui.add(material, 'roughness').step(0.01)
+Gui.addColor(material, 'color')
 
 
 const mesh1 = new Mesh(
@@ -109,15 +109,15 @@ const ambientLight = new AmbientLight(0xffffff, 1)
 scene.add(ambientLight)
 
 const pointLight = new PointLight(0xffffff, 1)
-pointLight.position.set(0,0,1)
+pointLight.position.set(0, 0, 1)
 scene.add(pointLight)
 
 const lightGui = Gui.addFolder('灯光')
-lightGui.add(pointLight.position,'x').step(0.01)
-lightGui.add(pointLight.position,'y').step(0.01)
-lightGui.add(pointLight.position,'z').step(0.01)
-lightGui.add(pointLight,'intensity').step(0.01)
-lightGui.addColor(pointLight,'color')
+lightGui.add(pointLight.position, 'x').step(0.01)
+lightGui.add(pointLight.position, 'y').step(0.01)
+lightGui.add(pointLight.position, 'z').step(0.01)
+lightGui.add(pointLight, 'intensity').step(0.01)
+lightGui.addColor(pointLight, 'color')
 
 
 
