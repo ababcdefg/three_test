@@ -7,13 +7,15 @@ import Gsap from 'gsap';
 import GUI from 'lil-gui';
 
 
-const scene = new Scene()
-scene.background = new Color(0,0,0)
 
-const viewSize = { width: 800, height: 600 } //视口比例
+const scene = new Scene()
+scene.background = new Color(0, 0, 0)
+
+const viewSize = { width: innerWidth, height: innerHeight } //视口比例
 
 const renderer = new WebGLRenderer()
 renderer.setSize(viewSize.width, viewSize.height)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))  //设置renderer按照浏览器的像素比渲染像素
 document.querySelector('#app')?.appendChild(renderer.domElement)
 
 //透视相机
@@ -80,6 +82,29 @@ const tick = () => {
 }
 tick()
 
+
+window.addEventListener('resize', () => {
+  viewSize.width = innerWidth
+  viewSize.height = innerHeight
+
+  // update camera
+  camera.aspect = viewSize.width / viewSize.height
+  camera.updateProjectionMatrix()
+  //update renderer
+  renderer.setSize(viewSize.width, viewSize.height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
+
+//双击全屏/退出全屏
+window.addEventListener('dblclick', () => {
+  // renderer.domElement.requestFullscreen({ navigationUI: document.fullscreenElement ? 'hide' : 'show' })
+  if (!document.fullscreenElement) {
+    renderer.domElement.requestFullscreen()
+  } else {
+    document.exitFullscreen()
+  }
+})
+// document.body.webkitCancelFullScreen()
 // setTimeout(() => {
 //   cube.position.set(0.7, -0.6, -1)
 //   cube.scale.set(2, 0.5, 0.5)
@@ -114,14 +139,14 @@ const cube4 = new Mesh(
 scene.add(cube4)
 
 const Gui = new GUI({
-  width:300,
-  title:'GUI',
-  closeFolders:false
+  width: 300,
+  title: 'GUI',
+  closeFolders: false
 })
 // Gui.close()
 // Gui.hide()
-window.addEventListener('keyup',(e)=>{
-  if(e.key === 'h'){
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'h') {
     Gui.show(Gui._hidden)
   }
 })

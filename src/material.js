@@ -15,6 +15,8 @@ const tex_matcap1 = textureLoader.load('../public/static/textures/matcaps/1.png'
 const tex_gradients3 = textureLoader.load('../public/static/textures/gradients/3.jpg')
 tex_gradients3.minFilter = NearestFilter
 tex_gradients3.magFilter = NearestFilter
+tex_gradients3.minFilter = NearestFilter
+tex_gradients3.magFilter = NearestFilter
 
 // tex_color.colorSpace = SRGBColorSpace
 
@@ -81,6 +83,9 @@ const Gui = new GUI({
   width: 300,
   title: 'GUI',
   closeFolders: false
+  width: 300,
+  title: 'GUI',
+  closeFolders: false
 })
 
 Gui.add(material, 'side')
@@ -117,6 +122,7 @@ const ambientLight = new AmbientLight(0xffffff, 1)
 scene.add(ambientLight)
 
 const pointLight = new PointLight(0xffffff, 1)
+pointLight.position.set(0, 0, 1)
 pointLight.position.set(0, 0, 1)
 scene.add(pointLight)
 
