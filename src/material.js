@@ -83,9 +83,6 @@ const Gui = new GUI({
   width: 300,
   title: 'GUI',
   closeFolders: false
-  width: 300,
-  title: 'GUI',
-  closeFolders: false
 })
 
 Gui.add(material, 'side')
