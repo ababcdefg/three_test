@@ -1,4 +1,4 @@
-import { Scene, Mesh, Color, WebGLRenderer, PerspectiveCamera, BoxGeometry, MeshBasicMaterial, SphereGeometry, PlaneGeometry, TorusGeometry, Clock, AmbientLight, PointLight, RawShaderMaterial, BufferGeometry } from 'three';
+import { Scene, Mesh, Color, WebGLRenderer, PerspectiveCamera, BoxGeometry, MeshBasicMaterial, SphereGeometry, PlaneGeometry, TorusGeometry, Clock, AmbientLight, PointLight, RawShaderMaterial, BufferGeometry, ShaderMaterial, DoubleSide } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import GUI from "lil-gui";
 
@@ -27,12 +27,14 @@ controls.enableDamping = true
 
 const material = new RawShaderMaterial({
   vertexShader: vertexShaderSource,
-  fragmentShader: fragmentShaderSource
+  fragmentShader: fragmentShaderSource,
+  wireframe: true,
+  side: DoubleSide
 })
 
 
 const mesh = new Mesh(
-  new PlaneGeometry(1, 1, 32, 32),
+  new PlaneGeometry(5, 5, 16, 16),
   material
 )
 scene.add(mesh)

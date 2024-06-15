@@ -175,3 +175,7 @@ Gui.add(debugObject, 'subdivision').min(1).max(10).step(1)
     cube4.geometry.dispose()
     cube4.geometry = new BoxGeometry(1, 1, 1, value, value, value)
   })
+
+
+
+

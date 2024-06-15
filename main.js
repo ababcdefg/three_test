@@ -4,4 +4,3 @@ import './style.css'
 // import './src/texture';
 // import './src/material';
 import './src/shader';
-
