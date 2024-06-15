@@ -1,4 +1,4 @@
-import { Scene, Mesh, Color, WebGLRenderer, PerspectiveCamera, BoxGeometry, MeshBasicMaterial, SphereGeometry, PlaneGeometry, TorusGeometry, Clock, TextureLoader, SRGBColorSpace, BackSide, DoubleSide, MeshNormalMaterial, MeshMatcapMaterial, MeshDepthMaterial, AmbientLight, PointLight, MeshLambertMaterial, MeshPhongMaterial, MeshToonMaterial, NearestFilter, MeshStandardMaterial } from 'three';
+import { Scene, Mesh, Color, WebGLRenderer, PerspectiveCamera, BoxGeometry, MeshBasicMaterial, SphereGeometry, PlaneGeometry, TorusGeometry, Clock, TextureLoader, SRGBColorSpace, BackSide, DoubleSide, MeshNormalMaterial, MeshMatcapMaterial, MeshDepthMaterial, AmbientLight, PointLight, MeshLambertMaterial, MeshPhongMaterial, MeshToonMaterial, NearestFilter, MeshStandardMaterial, BufferAttribute } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import GUI from "lil-gui";
 
@@ -13,6 +13,8 @@ const tex_roughness = textureLoader.load('../public/static/textures/door/roughne
 
 const tex_matcap1 = textureLoader.load('../public/static/textures/matcaps/1.png')
 const tex_gradients3 = textureLoader.load('../public/static/textures/gradients/3.jpg')
+tex_gradients3.minFilter = NearestFilter
+tex_gradients3.magFilter = NearestFilter
 tex_gradients3.minFilter = NearestFilter
 tex_gradients3.magFilter = NearestFilter
 
@@ -72,7 +74,9 @@ const material = new MeshStandardMaterial()
 material.side = DoubleSide
 material.metalness = 0.5
 material.roughness = 0
-
+material.map = tex_color
+material.aoMap = tex_ambientOcclusion  //环境闭塞贴图
+material.displacementMap = tex_height               //置换贴图
 
 
 const Gui = new GUI({
@@ -82,27 +86,33 @@ const Gui = new GUI({
 })
 
 Gui.add(material, 'side')
-Gui.add(material, 'metalness').step(0.01)
-Gui.add(material, 'roughness').step(0.01)
+Gui.add(material, 'wireframe')
+Gui.add(material, 'metalness').step(0.01).min(0).max(1)
+Gui.add(material, 'roughness').step(0.01).min(0).max(1)
 Gui.addColor(material, 'color')
+Gui.add(material, 'aoMapIntensity').step(0.1).min(0).max(10)
+Gui.add(material, 'displacementScale').step(0.1).min(0).max(10)
 
 
 const mesh1 = new Mesh(
   new SphereGeometry(1),
   material
 )
-mesh1.position.x = -2
+mesh1.position.x = -4
 
 const mesh2 = new Mesh(
-  new PlaneGeometry(2, 2),
+  new PlaneGeometry(2, 2,100,100),
   material
 )
+// mesh2.geometry.setAttribute('uv2',
+//   new BufferAttribute(mesh2.geometry.attributes.uv.array, 2)
+// )
 
 const mesh3 = new Mesh(
   new TorusGeometry(),
   material
 )
-mesh3.position.x = 2
+mesh3.position.x = 4
 scene.add(mesh1, mesh2, mesh3)
 
 const ambientLight = new AmbientLight(0xffffff, 1)
@@ -110,12 +120,13 @@ scene.add(ambientLight)
 
 const pointLight = new PointLight(0xffffff, 1)
 pointLight.position.set(0, 0, 1)
+pointLight.position.set(0, 0, 1)
 scene.add(pointLight)
 
 const lightGui = Gui.addFolder('灯光')
-lightGui.add(pointLight.position, 'x').step(0.01)
-lightGui.add(pointLight.position, 'y').step(0.01)
-lightGui.add(pointLight.position, 'z').step(0.01)
+lightGui.add(pointLight.position, 'x').min(-3).max(3).step(0.01)
+lightGui.add(pointLight.position, 'y').min(-3).max(3).step(0.01)
+lightGui.add(pointLight.position, 'z').min(-3).max(3).step(0.01)
 lightGui.add(pointLight, 'intensity').step(0.01)
 lightGui.addColor(pointLight, 'color')
 
@@ -124,12 +135,12 @@ lightGui.addColor(pointLight, 'color')
 const clock = new Clock()
 const tick = () => {
   const elapsedTime = clock.getElapsedTime()
-  mesh1.rotation.y = elapsedTime * 0.5
-  mesh2.rotation.y = elapsedTime * 0.5
-  mesh3.rotation.y = elapsedTime * 0.5
-  mesh1.rotation.x = elapsedTime * 0.5
-  mesh2.rotation.x = elapsedTime * 0.5
-  mesh3.rotation.x = elapsedTime * 0.5
+  // mesh1.rotation.y = elapsedTime * 0.5
+  // mesh2.rotation.y = elapsedTime * 0.5
+  // mesh3.rotation.y = elapsedTime * 0.5
+  // mesh1.rotation.x = elapsedTime * 0.5
+  // mesh2.rotation.x = elapsedTime * 0.5
+  // mesh3.rotation.x = elapsedTime * 0.5
 
   controls.update()
   renderer.render(scene, camera)
