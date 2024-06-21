@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: bisque;
+    }
+
+    #canvas {
+      width: 1200px;
+      height: 800px;
+      background: transparent;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+
+  <script>
+    const canvas = document.getElementById('canvas')
+    const engine = new BABYLON.Engine(canvas, true)
+
+
+    const createScene = () => {
+      const {
+        Scene,
+        MeshBuilder,
+        Color4,
+        Color3,
+        Vector3,
+        ArcRotateCamera,
+        HemisphericLight,
+        DirectionalLight,
+        StandardMaterial,
+        TransformNode,
+        SceneLoader,
+        SceneSerializer,
+        GLTF2Export
+      } = BABYLON
+
+      const scene = new Scene(engine)
+      // engine.clearColor = new Color4(0,0,1,0)
+      scene.clearColor = new Color4(.8, .8, .8, 1)
+      const camera = new ArcRotateCamera(
+        'camera1',
+        0,
+        0,
+        10,
+        new Vector3(0, 0, 0),
+        scene
+      )
+      camera.position = new Vector3(30, 30, -150)
+      camera.attachControl(canvas, true)
+      camera.minZ = 0
+      camera.maxZ = 1000
+      camera.lowerRadiusLimit = 1
+      const light = new HemisphericLight('light', new Vector3(0, 1, 0), scene)
+      light.intensity = 1
+
+      const light2 = new HemisphericLight(
+        'light2',
+        new Vector3(0, -1, 0),
+        scene
+      )
+      light2.intensity = 1
+
+      const data = [
+        { ch: '保险杠', en: 'BUM' },
+        { ch: '叶子板', en: 'LB' },
+        { ch: 'A柱', en: 'APR' },
+        { ch: 'B柱', en: 'BPR' },
+        { ch: 'C柱', en: 'CPR' },
+        { ch: '门', en: 'DR' },
+        { ch: '刹车卡钳', en: 'BC' },
+        { ch: '轮毂', en: 'HUB' },
+        { ch: '轮眉', en: 'WE' },
+        { ch: '门槛', en: 'THRHD' },
+        { ch: '饰条', en: 'PN' },
+        { ch: '车门拉手', en: 'DH' },
+        { ch: '中网', en: 'GRILLE' },
+        { ch: '防撞梁', en: 'BUMB' },
+        { ch: '水箱框架', en: 'TFRM' },
+        { ch: '倒车镜', en: 'RVM' },
+        { ch: '天窗', en: 'RWHS_RWWS_RWNS' },
+        { ch: '尾板', en: 'TG' },
+        { ch: '尾翼', en: 'TAIL' },
+        { ch: '机盖内侧', en: 'CVIS' },
+        { ch: '纵梁', en: 'LBM' },
+        { ch: '门内侧', en: 'ID' },
+        { ch: '盖内侧', en: 'CVIS' },
+        { ch: '备胎桶', en: 'SWFRM' }
+      ]
+
+      SceneLoader.ImportMesh('', './model/', 'CAR.glb', scene, (meshes, b, c) => {
+        console.log(meshes);
+        meshes.forEach(mesh => {
+          const names = data.find(n => mesh.name.indexOf(n.ch) !== -1 && (mesh.name.lastIndexOf(n.ch) + n.ch.length === mesh.name.length))
+          if (names) {
+            let newName = ''
+            if (mesh.name.indexOf('左') !== -1) newName += 'L'
+            if (mesh.name.indexOf('右') !== -1) newName += 'R'
+            if (mesh.name.indexOf('前') !== -1) newName += 'F'
+            if (mesh.name.indexOf('后') !== -1) newName += 'R'
+            mesh.name2 = mesh.name
+            mesh.name = newName + names.en
+          }
+        })
+
+        setTimeout(() => {
+
+          let options = {
+            shouldExportNode: function (node) {
+              return ![light, light2, camera].includes(node);
+            },
+          };
+
+          GLTF2Export.GLBAsync(scene, "fileName", options).then((glb) => {
+            glb.downloadFiles();
+          });
+
+        }, 5000);
+      })
+
+      return scene
+    }
+
+
+
+    const scene = createScene()
+    engine.runRenderLoop(() => {
+      scene.render()
+    })
+    window.addEventListener('resize', () => {
+      engine.resize()
+    })
+  </script>
+</body>
+
+</html>
