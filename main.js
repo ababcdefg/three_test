@@ -7,6 +7,7 @@ import './style.css'
 // import './src/shaderTest';
 // import './src/shaderDemo1';
 // import './src/shadow'
-import './src/ghostHouse'
+// import './src/ghostHouse'
+import './src/particle'
 
 
