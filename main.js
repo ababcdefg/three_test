@@ -8,6 +8,7 @@ import './style.css'
 // import './src/shaderDemo1';
 // import './src/shadow'
 // import './src/ghostHouse'
-import './src/particle'
+// import './src/particle'
+import './src/galaxy'
 
 
