@@ -9,6 +9,6 @@ import './style.css'
 // import './src/shadow'
 // import './src/ghostHouse'
 // import './src/particle'
-import '@/src/galaxy'
+import './src/galaxy'
 
 
